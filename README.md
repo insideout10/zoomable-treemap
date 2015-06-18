@@ -12,4 +12,4 @@ To install it on your computer open terminal and type:
 ```
 git clone https://github.com/insideout10/zoomable-treemap.git
 ```
-Enter the downloaded folder and open `demo.html` in your browser.
+Enter the downloaded folder and open `index.html` in your browser.
