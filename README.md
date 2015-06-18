@@ -53,3 +53,28 @@ You can provide a color and Url to a node in the tree with an `info` object:
 ```
 
 To insert the treemap in a HTML page, load `jquery.js`, `d3.js` and `treemap.js` code, then build a div with attributes `id="treemap-container"` and `data-file="<json file address>"`. Below we report the `index.html` you can find in this repo, with useful comments.
+
+```
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>dati.gov.it - Zoomable treemap</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link href='http://fonts.googleapis.com/css?family=Titillium+Web' rel='stylesheet' type='text/css'>
+        
+        <link rel="stylesheet" href="treemap.css">
+    </head>
+    <body>
+        
+        <!-- Insert div for the treemap -->
+        <div id="treemap-container" data-file="flare.json"></div>
+        
+        <!-- Insert necessary Javascript code -->
+        <script src="js/d3.min.js"></script>
+        <script src="js/jquery.min.js"></script>
+        <script src="js/treemap.js"></script>
+    </body>
+</html>
+```
