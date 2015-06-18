@@ -1,20 +1,28 @@
 
+jQuery(document).ready( function() {
 
         var datigovitTreemap = function(){
 
         // Main data structure
         var data;
 
+        // Find container element and extract dataset name
+        var treemapCssContainer = '#treemap-container';
+        var treemapFilename = jQuery(treemapCssContainer).data('file');
+        var datasetName = jQuery(treemapCssContainer).data('file');
+        console.log(datasetName);
+            
         // Create <svg> and resize it
-        var selection = d3.select('#treemap-container').text('');
+        var selection = d3.select( treemapCssContainer ).text('');
         selection = selection.append('svg').style('width', '100%').style('height', '300px');
         
         var width = parseInt( selection.style('width'), 10 );
         var height = parseInt( selection.style('height'), 10 );
-
-        d3.json('flare.json', function(error, json){
+        
+        d3.json(datasetName, function(error, json){
+//        d3.json('agenda.json', function(error, json){
             if (error) {
-                console.warn(error);
+                //console.warn(error);
             } else {
                 data = json;
                 initTreemap();
@@ -41,7 +49,6 @@
                     .attr('height', marginTop + height)
                     .style('background', '#ddd')
                     .append('g')
-                        //.attr("transform", "translate(0," + marginTop + ")")
                         .style('shape-rendering', 'crispEdges');
 
             var grandparent = selection.append('g')
@@ -70,14 +77,7 @@
                 .children(function(d, depth) {
                     return depth ? null : d._children;
                 })
-                .value(countDescendance)/*function(d) {
-                    if(d.size){
-                        return d.size;
-                    } else if (d._children){
-                        return d._children.length;
-                    }
-                    return 1;
-                })*/
+                .value(countDescendance)
                 .sort(function(a, b) {
                     return a.value - b.value;
                 })
@@ -172,27 +172,14 @@
                         .enter().append('rect')
                         .attr('class', 'child')
                         .call(rect)
-                        .style('fill', function(d){
-                            if(d.color){
-                                return colors()(d.color);
-                            } else {
-                                return;
-                            }
-                        });
+                        .style('fill', getColor);
 
                 g.append('rect')
                         .attr('class', 'parent')
                         .call(rect)
-                        .style('cursor', 'pointer')
+                        .style('cursor', leafPointer)
                         .style('fill-opacity', '0.5')
-                        .style('fill', function(d){
-                            //console.log(d);
-                            if( d.info.color ) {
-                                return d.info.color;
-                            } else {
-                                return '#bbb';
-                            }
-                        })
+                        .style('fill', getColor)
                         .style('stroke-width', '2px')
                         .on('mouseout', function(){
                             d3.select(this).style('fill-opacity', '0.5');
@@ -255,11 +242,24 @@
             
             function leafClicked(d) {
                 // Click on final leaf
-                console.log(d.info.Url);
-                if( d.info.Url && !d._children ) {
-                    console.log(d.info.Url);
+                if( d.info && d.info.Url && !d._children ) {
                     window.location = d.info.Url;
                 }
+            }
+            
+            function leafPointer(d) {
+                if( !d || !d.info || (d.info.Url || d._children ) ) {
+                    return 'pointer';
+                }
+                
+                return 'default';
+            }
+            
+            function getColor(d){
+                if( d.info && d.info.color /* && !d._children */) {
+                    return d.info.color;
+                }
+                return '#bbb';
             }
             
             function refreshLabels(g2, d) {
@@ -280,13 +280,13 @@
                             
                             var containerAvg = Math.sqrt(containerWidth * containerHeight);
 
-                            var fontSize = 0.8 * containerAvg/ Math.sqrt(d.name.length);
+                            var fontSize = 0.7 * containerAvg/ Math.sqrt(d.name.length);
                             
                             if(fontSize < 6){
                                 fontSize = 0;
                             }
-                            if(fontSize > 70) {
-                                fontSize = 70;
+                            if(fontSize > 30) {
+                                fontSize = 30;
                             }
 
                             return fontSize;
@@ -368,7 +368,7 @@
                     }
                     return 6;
                 })
-                .style('cursor', 'pointer')
+                .style('cursor', leafPointer)
                 .style('font-family', 'Titillium Web, Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif');
             }
 
@@ -402,3 +402,4 @@
 
         }
     }();
+});
