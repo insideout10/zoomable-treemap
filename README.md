@@ -10,6 +10,7 @@ Treemap script as published on the italian open data portal - [dati.gov.it](http
 
 To install it on your computer open terminal and type:
 ```
+cd <path to your local web server>
 git clone https://github.com/insideout10/zoomable-treemap.git
 ```
-Enter the downloaded folder and open `index.html` in your browser.
+Enter the downloaded folder and open `localhost/zoomable-treemap/` in your browser.
