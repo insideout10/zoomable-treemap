@@ -6,11 +6,12 @@
 ![](./img/osi.png)
 
 ## Introduction
-Treemap script as published on the italian open data portal - [dati.gov.it](http://www.dati.gov.it). Written with [D3.js](http://d3js.org/) starting from [this version](http://bost.ocks.org/mike/treemap/) by [Mike Bostock](http://bost.ocks.org/mike/).
+Zoomable Treemap is a javascript library to visualise and discover hierarchical data. Treemaps are a form of visualization where the area of each rectangle is proportional to its value. Originally developed by [Mike Bostock](http://bost.ocks.org/mike/) the [treemap](http://bost.ocks.org/mike/treemap/) uses [D3.js](http://d3js.org/).
+This version extends the original library allowing to use the treemap as a navigation device for web and mobile users. This version of the treemap has been designed for the Italian Open Data catalogue - [dati.gov.it](http://www.dati.gov.it).
 
-## See it in your webserver
+## Installation
 
-To install it on your server open terminal and type commands:
+To install the treemap on your website open the terminal and type the following commands:
 ```
 cd <path to your local web server>
 
@@ -78,3 +79,6 @@ To insert the treemap in a HTML page, load `jquery.js`, `d3.js` and `treemap.js`
     </body>
 </html>
 ```
+## License
+
+This software is released under BSD license. 
