@@ -14,4 +14,10 @@ cd <path to your local web server>
 
 git clone https://github.com/insideout10/zoomable-treemap.git
 ```
-Enter the downloaded folder and open `localhost/zoomable-treemap/` in your browser.
+You can now open `localhost/zoomable-treemap/` in your browser. The data visualized come from the classic flare.json, but you can give the treemap any JSON organized in this way:
+
+```
+json di prova
+```
+
+To insert the treemap in a page, load D3 and treemap.js in page, then build a div with attributes `id="treemap-container"` and `data-file="<json file address>"`. Below we report the `index.html` with useful comments.
