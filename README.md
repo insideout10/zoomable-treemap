@@ -22,10 +22,34 @@ You can now open `localhost/zoomable-treemap/` in your browser.
 
 ## Use it in your website
 
-The data visualized come from the classic flare.json, but you can give the treemap any JSON organized in this way:
+The data visualized come from the classic [flare.json](https://gist.github.com/mbostock/1093025#file-flare-json), but you can give the treemap any JSON organized in this way:
 
 ```
-json di prova
+{
+ "name": "flare",
+ "children": [
+  {
+   "name": "analytics",
+   "children": [
+    {
+     "name": "cluster",
+     "children": [
+      {"name": "AgglomerativeCluster", "size": 3938},
+      {"name": "CommunityStructure", "size": 3812},
+      {"name": "HierarchicalCluster", "size": 6714}
+      ...
+```
+You can provide a color and Url to a node in the tree with an `info` object:
+
+```
+{
+   "name": "analytics",
+   "info":{
+    "Url": "http://...",
+    "color": "#3d5"
+   },
+   ...
+
 ```
 
 To insert the treemap in a HTML page, load `jquery.js`, `d3.js` and `treemap.js` code, then build a div with attributes `id="treemap-container"` and `data-file="<json file address>"`. Below we report the `index.html` you can find in this repo, with useful comments.
