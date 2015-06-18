@@ -81,4 +81,4 @@ To insert the treemap in a HTML page, load `jquery.js`, `d3.js` and `treemap.js`
 ```
 ## License
 
-This software is released under BSD license. 
+This software is released under [BSD license](http://opensource.org/licenses/BSD-3-Clause). Copyright (c) 2010-2015, Michael Bostock. All rights reserved.
