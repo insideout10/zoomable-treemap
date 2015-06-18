@@ -18,6 +18,8 @@ git clone https://github.com/insideout10/zoomable-treemap.git
 ```
 You can now open `localhost/zoomable-treemap/` in your browser.
 
+![](./img/screenshot.png)
+
 ## Use it in your website
 
 The data visualized come from the classic flare.json, but you can give the treemap any JSON organized in this way:
