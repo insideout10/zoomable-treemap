@@ -27,6 +27,21 @@
     </div>
   </div>
 
+  <script id="tile_template" type="text/x-handlebars-template">
+    <div class="test-wrap" data-id="{{id-unico}}" style="top: 60px; left: 20px">
+      <div class="rect">
+        <h2>{{titolo}}</h2>
+        <hr />
+        <div class="bottom">
+          <h4>{{descrittore}}<span>{{numero-elementi-interni}}</span></h4>
+        </div>
+        <div class="circ">
+          <img src="{{icona}}" alt="" />
+        </div>
+      </div>
+    </div>
+  </script>
+
   <!-- javascript  -->
   <script src="js/bundle.js"></script>
 

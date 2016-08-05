@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "![](./img/agid.png)",
   "main": "gulpfile.js",
-  "dependencies": {},
+  "dependencies": {
+    "handlebars": "^4.0.5"
+  },
   "devDependencies": {
     "browser-sync": "^2.14.0",
     "del": "^2.2.1",
