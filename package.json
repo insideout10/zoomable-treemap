@@ -1,0 +1,28 @@
+{
+  "name": "zoomable-treemap",
+  "version": "1.0.0",
+  "description": "![](./img/agid.png)",
+  "main": "gulpfile.js",
+  "dependencies": {},
+  "devDependencies": {
+    "browser-sync": "^2.14.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-browserify": "^0.5.1",
+    "gulp-sass": "^2.3.2",
+    "run-sequence": "^1.2.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/insideout10/zoomable-treemap.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/insideout10/zoomable-treemap/issues"
+  },
+  "homepage": "https://github.com/insideout10/zoomable-treemap#readme"
+}
