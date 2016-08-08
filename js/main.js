@@ -1,13 +1,17 @@
-jQuery = $ = require('./jquery.min');
-d3 = require('./d3.min');
-Handlebars = require('handlebars');
-require('./treemap');
 
-var source = $('#tile_template').html();
-var tpl = Handlebars.compile(source);
-var obj = {
-  titolo: 'ciao titolo',
-  descrittore: 'una saaa.'
+'use strict';
+
+var $ = require('jquery');
+var Treemap = require('./treemap');
+
+// Main data structure
+var treemapConfig = {
+    containerSelector : '#treemap-container',
+    width             : '100%',
+    height            : '300px',
+    templateSelector  : '#tile_template'
 };
 
-$('body').append( tpl(obj) );
+$(document).ready( function() {
+    var treemap = new Treemap(treemapConfig);
+});

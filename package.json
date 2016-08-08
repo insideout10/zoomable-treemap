@@ -4,7 +4,9 @@
   "description": "![](./img/agid.png)",
   "main": "gulpfile.js",
   "dependencies": {
-    "handlebars": "^4.0.5"
+    "d3": "^4.2.1",
+    "handlebars": "^4.0.5",
+    "jquery": "^3.1.0"
   },
   "devDependencies": {
     "browser-sync": "^2.14.0",

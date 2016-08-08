@@ -42,7 +42,6 @@ gulp.task('sass', function(){
 
 gulp.task('browserify', function(done) {
     // Single entry point to browserify
-    del('treemapBundle.js');
     gulp.src('js/main.js')
         .pipe(browserify({
           insertGlobals : true,
