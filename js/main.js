@@ -9,7 +9,7 @@ var treemapConfig = {
     containerSelector : '#treemap-container',
     width             : '100%',
     height            : '300px',
-    templateSelector  : '#tile_template'
+    templateSelector  : '#treemap-tile-template'
 };
 
 $(document).ready( function() {

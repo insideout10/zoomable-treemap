@@ -60,12 +60,14 @@ Treemap.prototype.initTreemap = function(){
     navigation.append('span')
         .attr('id', 'treemap-navigation-up')
         .text(' ___up')
+        .style('cursor', 'pointer')
         .on('click', function(){
             treemapObj.upOneLevel();
         });
     navigation.append('span').text('home')
         .attr('id', 'treemap-navigation-home') 
         .text(' ___home')
+        .style('cursor', 'pointer')
         .on('click', function(){
             treemapObj.upToTopLevel();
         });
@@ -78,7 +80,6 @@ Treemap.prototype.initTreemap = function(){
         .style('height', treemapObj.tilesContainerHeight + 'px')
         .style('position', 'relative');
 };
-
 
 Treemap.prototype.updateTreemap = function(node){
     
@@ -118,8 +119,14 @@ Treemap.prototype.updateTreemap = function(node){
         .style('background-color', function(d, i){
             return d3.schemeCategory20[i%20];
         })
+        .style('cursor', 'pointer')
         .html(function(d){
-            return d.data.name;
+            var tplObj = {
+                'titolo'                 : d.data.name,
+                'descrittore'            : d.data.name + d.data.name,
+                'numero-elementi-interni': d.value
+            };
+            return treemapObj.tileTpl(tplObj);
         })
         .on('click', function(d){
             if(d.children){
@@ -133,7 +140,9 @@ Treemap.prototype.updateTreemap = function(node){
 Treemap.prototype.upOneLevel = function(){
     
     // display parent node
-    this.updateTreemap(this.currentNode.parent);
+    if(this.currentNode.parent){
+        this.updateTreemap(this.currentNode.parent);
+    }
 };
 
 Treemap.prototype.upToTopLevel = function(){
