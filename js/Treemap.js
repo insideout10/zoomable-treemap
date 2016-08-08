@@ -1,6 +1,7 @@
 
-var $ = require('jquery');
-var d3 = require('d3');
+var TreePath   = require('./TreePath');
+var $          = require('jquery');
+var d3         = require('d3');
 var Handlebars = require('handlebars');
 
 var Treemap = function(config){
@@ -37,6 +38,9 @@ Treemap.prototype.initTreemap = function(){
     
     // Reference to current obj
     var treemapObj = this;
+    
+    // Use TreePath object to keep track of navigation
+    treemapObj.treePath = new TreePath(treemapObj.data);
         
     // Create main <div> and resize it
     treemapObj.selection = d3.select( treemapObj.config.containerSelector )
@@ -49,27 +53,31 @@ Treemap.prototype.initTreemap = function(){
     
     // Add breadcumbs / navigation bar
     treemapObj.navigationHeight = 50;
-    var navigation = treemapObj.selection.append('div')
+    treemapObj.navigation = treemapObj.selection.append('div')
         .attr('id', 'treemap-navigation')
         .style('width', '100%')
         .style('height', treemapObj.navigationHeight + 'px');
 
     // Add breadcumbs text and buttons
-    navigation.append('span')
-        .attr('id', 'treemap-navigation-breadcumbs');
-    navigation.append('span')
+    treemapObj.breadCumbs = treemapObj.navigation.append('span')
+        .attr('id', 'treemap-navigation-breadcumbs')
+        .style('cursor', 'pointer')
+        .on('click', function(){
+            treemapObj.upOneLevel();
+        });;
+    treemapObj.navigation.append('span')
         .attr('id', 'treemap-navigation-up')
         .text(' ___up')
         .style('cursor', 'pointer')
         .on('click', function(){
             treemapObj.upOneLevel();
         });
-    navigation.append('span').text('home')
+    treemapObj.navigation.append('span').text('home')
         .attr('id', 'treemap-navigation-home') 
         .text(' ___home')
         .style('cursor', 'pointer')
         .on('click', function(){
-            treemapObj.upToTopLevel();
+            treemapObj.upToRoot();
         });
 
     // Add tiles container
@@ -81,21 +89,21 @@ Treemap.prototype.initTreemap = function(){
         .style('position', 'relative');
 };
 
-Treemap.prototype.updateTreemap = function(node){
+Treemap.prototype.updateTreemap = function(){
     
     // Reference to current obj
     var treemapObj = this;
     
-    // Store the node being displayed
-    treemapObj.currentNode = node;
+    // Update breadCumbs
+    treemapObj.updateBreadCrumbs();
         
     var layoutSize = [treemapObj.config.width, treemapObj.tilesContainerHeight];
     treemapObj.layout = d3.treemap()
         .size( layoutSize );
 
-    var nodeCopy = node.copy();
+    var currentNode = treemapObj.treePath.currentNode()
+    var nodeCopy    = currentNode.copy();
     layoutNode = treemapObj.layout(nodeCopy);
-    console.log(layoutNode);
 
     treemapObj.selection.selectAll('.node').remove();
     treemapObj.selection.select('#treemap-tiles-container').selectAll('.node')
@@ -130,25 +138,53 @@ Treemap.prototype.updateTreemap = function(node){
         })
         .on('click', function(d){
             if(d.children){
-                treemapObj.updateTreemap(d);
+                treemapObj.downTo(d);
             } else {
                 alert('leaf');
             }
         });
 };
 
-Treemap.prototype.upOneLevel = function(){
+Treemap.prototype.updateBreadCrumbs = function(){
     
-    // display parent node
-    if(this.currentNode.parent){
-        this.updateTreemap(this.currentNode.parent);
+    var separator = ' | '
+    var breadCumbsTxt = '';
+    
+    var ancestors = this.treePath.path;
+    if(ancestors){
+        ancestors.forEach(function(a){
+            breadCumbsTxt = breadCumbsTxt + separator + a.data.name;
+        });
     }
+    
+    this.breadCumbs.text(breadCumbsTxt);
 };
 
-Treemap.prototype.upToTopLevel = function(){
+Treemap.prototype.downTo = function(node){
+    
+    // update path
+    this.treePath.downTo(node);
+    
+    // display subNode
+    this.updateTreemap();
+};
+
+Treemap.prototype.upOneLevel = function(){
+    
+    // update path
+    this.treePath.upOneLevel();
+    
+    // display parent node
+    this.updateTreemap();
+};
+
+Treemap.prototype.upToRoot = function(){
+    
+    // update path
+    this.treePath.upToRoot();
     
     // display root node
-    this.updateTreemap(this.data);
+    this.updateTreemap();
 };
 
 module.exports = Treemap;

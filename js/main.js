@@ -2,7 +2,7 @@
 'use strict';
 
 var $ = require('jquery');
-var Treemap = require('./treemap');
+var Treemap = require('./Treemap');
 
 // Main data structure
 var treemapConfig = {
