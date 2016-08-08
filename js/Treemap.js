@@ -1,8 +1,8 @@
 
-var TreePath   = require('./TreePath');
-var $          = require('jquery');
-var d3         = require('d3');
-var Handlebars = require('handlebars');
+var TreePath = require('./TreePath');
+var $        = require('./../node_modules/jquery/dist/jquery.min.js');
+var d3       = require('./../node_modules/d3/build/d3.min.js');
+var Handlebars = require('./../node_modules/handlebars/dist/handlebars.min.js'); 
 
 var Treemap = function(config){
     
