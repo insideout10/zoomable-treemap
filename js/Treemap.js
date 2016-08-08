@@ -1,7 +1,9 @@
 
-var TreePath = require('./TreePath');
-var $        = require('./../node_modules/jquery/dist/jquery.min.js');
-var d3       = require('./../node_modules/d3/build/d3.min.js');
+'use strict';
+
+var TreePath   = require('./TreePath');
+var $          = require('./../node_modules/jquery/dist/jquery.min.js');
+var d3         = require('./../node_modules/d3/build/d3.min.js');
 var Handlebars = require('./../node_modules/handlebars/dist/handlebars.min.js'); 
 
 var Treemap = function(config){
@@ -24,10 +26,15 @@ var Treemap = function(config){
         if (error) {
             console.error(error);
         } else {
+            
+            // prepare data
             treemapObj.data = d3.hierarchy(json);
             treemapObj.data.sum(function(d){
-                return 1;
-            });
+                    return 1;
+                })
+                .sort(treemapObj.config.sortCallback);
+                
+            // init and launch treemap
             treemapObj.initTreemap();
             treemapObj.updateTreemap(treemapObj.data);
         }
@@ -97,13 +104,19 @@ Treemap.prototype.updateTreemap = function(){
     // Update breadCumbs
     treemapObj.updateBreadCrumbs();
         
+    // build layout
     var layoutSize = [treemapObj.config.width, treemapObj.tilesContainerHeight];
     treemapObj.layout = d3.treemap()
-        .size( layoutSize );
+        .size( layoutSize )
+        //.tile(d3.treemapSlice)
+        //.tile(d3.treemapBinary)
+        .tile(d3.treemapSquarify)
+        .padding(5);
 
-    var currentNode = treemapObj.treePath.currentNode()
-    var nodeCopy    = currentNode.copy();
-    layoutNode = treemapObj.layout(nodeCopy);
+    // run layout for current node
+    var currentNode = treemapObj.treePath.currentNode();
+    var nodeCopy    = currentNode.copy();   // copy node and descendants, so the laytout does not mess with original data
+    var layoutNode = treemapObj.layout(nodeCopy);
 
     treemapObj.selection.selectAll('.node').remove();
     treemapObj.selection.select('#treemap-tiles-container').selectAll('.node')
@@ -129,12 +142,13 @@ Treemap.prototype.updateTreemap = function(){
         })
         .style('cursor', 'pointer')
         .html(function(d){
-            var tplObj = {
+            /*var tplObj = {
                 'titolo'                 : d.data.name,
                 'descrittore'            : d.data.name + d.data.name,
                 'numero-elementi-interni': d.value
             };
-            return treemapObj.tileTpl(tplObj);
+            return treemapObj.tileTpl(tplObj);*/
+            return d.data.name;
         })
         .on('click', function(d){
             if(d.children){
