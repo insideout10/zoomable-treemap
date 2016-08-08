@@ -7,7 +7,7 @@ var source = $('#tile_template').html();
 var tpl = Handlebars.compile(source);
 var obj = {
   titolo: 'ciao titolo',
-  descrittore: 'bla blas vlaaaaaaaaaa aaaaa aaa aa aa a .'
+  descrittore: 'una saaa.'
 };
 
 $('body').append( tpl(obj) );

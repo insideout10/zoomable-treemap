@@ -15,7 +15,7 @@ gulp.task('default', function(){
 
 gulp.task('watch', ['browserSync'], function(){
   gulp.watch('scss/**/*.sass', ['sass', browserSync.reload]);
-  gulp.watch('js/**/*.js', ['browserify', browserSync.reload]);
+  gulp.watch(['js/**/*.js'], ['browserify', browserSync.reload]);
   gulp.watch('./index.html', browserSync.reload);
 });
 
@@ -40,13 +40,15 @@ gulp.task('sass', function(){
     .pipe(gulp.dest('css/'));
 });
 
-gulp.task('browserify', function() {
+gulp.task('browserify', function(done) {
     // Single entry point to browserify
+    del('treemapBundle.js');
     gulp.src('js/main.js')
         .pipe(browserify({
           insertGlobals : true,
           debug : !gulp.env.production
         }))
-        .pipe(rename('bundle.js'))
-        .pipe(gulp.dest('js/'));
+        .pipe(rename('treemapBundle.js'))
+        .pipe(gulp.dest('./'))
+        .on('end', done);   // must wait for bundle.js to be wrote before calling browserSync
 });
