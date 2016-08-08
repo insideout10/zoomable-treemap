@@ -52,7 +52,7 @@ Treemap.prototype.initTreemap = function(){
     treemapObj.config.height = parseInt( treemapObj.selection.style('height'), 10 );
     
     // Add breadcumbs / navigation bar
-    treemapObj.navigationHeight = 50;
+    treemapObj.navigationHeight = parseInt( treemapObj.config.breadCumbs.height.replace('px', ''), 10 );
     treemapObj.navigation = treemapObj.selection.append('div')
         .attr('id', 'treemap-navigation')
         .style('width', '100%')
@@ -147,13 +147,13 @@ Treemap.prototype.updateTreemap = function(){
 
 Treemap.prototype.updateBreadCrumbs = function(){
     
-    var separator = ' | '
+    var separator = this.config.breadCumbs.separator;
     var breadCumbsTxt = '';
     
     var ancestors = this.treePath.path;
     if(ancestors){
         ancestors.forEach(function(a){
-            breadCumbsTxt = breadCumbsTxt + separator + a.data.name;
+            breadCumbsTxt = breadCumbsTxt + a.data.name + separator;
         });
     }
     
