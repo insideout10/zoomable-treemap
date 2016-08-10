@@ -1,12 +1,15 @@
 
 'use strict';
 
-var TreePath   = require('./TreePath');
-var $          = require('./../node_modules/jquery/dist/jquery.min.js');
-var d3         = require('./../node_modules/d3/build/d3.min.js');
-var Handlebars = require('./../node_modules/handlebars/dist/handlebars.min.js'); 
+var TreePath     = require('./TreePath');
+var LayoutHelper = require('./LayoutHelper');
+var $            = require('./../node_modules/jquery/dist/jquery.min.js');
+var d3           = require('./../node_modules/d3/build/d3.min.js');
+var Handlebars   = require('./../node_modules/handlebars/dist/handlebars.min.js'); 
 
 var Treemap = function(config){
+    
+    // TODO: config defaults
     
     // Reference to current obj
     var treemapObj = this;
@@ -18,7 +21,7 @@ var Treemap = function(config){
     var datasetName = $(config.containerSelector).data('file');
 
     // Load template
-    var tileTplSource = $(config.templateSelector).html();
+    var tileTplSource = $(config.tiles.templateSelector).html();
     treemapObj.tileTpl = Handlebars.compile(tileTplSource);
 
     // Load data and then draw the treemap
@@ -94,6 +97,12 @@ Treemap.prototype.initTreemap = function(){
         .style('width', '100%')
         .style('height', treemapObj.tilesContainerHeight + 'px')
         .style('position', 'relative');
+
+
+    // Use Layout helper to manage layout
+    var layoutSize = [treemapObj.config.width, treemapObj.tilesContainerHeight];
+    treemapObj.layoutHelper = new LayoutHelper(layoutSize);
+    
 };
 
 Treemap.prototype.updateTreemap = function(){
@@ -103,20 +112,26 @@ Treemap.prototype.updateTreemap = function(){
     
     // Update breadCumbs
     treemapObj.updateBreadCrumbs();
-        
-    // build layout
-    var layoutSize = [treemapObj.config.width, treemapObj.tilesContainerHeight];
-    treemapObj.layout = d3.treemap()
-        .size( layoutSize )
-        //.tile(d3.treemapSlice)
-        //.tile(d3.treemapBinary)
-        .tile(d3.treemapSquarify)
-        .padding(5);
+
+    ////////////////////////////////////
+    ////////////////////////////////////
 
     // run layout for current node
     var currentNode = treemapObj.treePath.currentNode();
     var nodeCopy    = currentNode.copy();   // copy node and descendants, so the laytout does not mess with original data
-    var layoutNode = treemapObj.layout(nodeCopy);
+    
+    var layoutNode;
+    var iterations = 0;
+    var layoutObtained = false;
+    while( (!layoutObtained) && iterations < 100 ){
+        var layoutNode = treemapObj.layoutHelper.layout(nodeCopy);
+        console.log(layoutNode.children);
+        var tileSizeRespected = treemapObj.layoutHelper.isMinimalTileSizeRespected(layoutNode, 200, 100);
+        iterations++;
+    }
+    
+    //////////////////////////////////
+    //////////////////////////////////
 
     treemapObj.selection.selectAll('.node').remove();
     treemapObj.selection.select('#treemap-tiles-container').selectAll('.node')

@@ -12,10 +12,16 @@ var treemapConfig = {
     
     // width and height of the treemap
     width             : '100%',
-    height            : '300px',
+    height            : '400px',
     
-    // CSS selector for the DOM element containing the Handlebars tile template
-    templateSelector  : '#treemap-tile-template',
+    // tile options
+    tiles: {
+        // Minimal size
+        minWidth         : 200,
+        minHeight        : 100,
+        // CSS selector for the DOM element containing the Handlebars tile template
+        templateSelector  : '#treemap-tile-template'
+    },
     
     // How to sort tiles
     sortCallback      : function(a, b){

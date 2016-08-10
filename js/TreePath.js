@@ -1,3 +1,5 @@
+'use strict';
+
 var TreePath = function(tree){
     this.tree = tree;
     this.upToRoot();
