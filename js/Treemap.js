@@ -101,7 +101,7 @@ Treemap.prototype.initTreemap = function(){
 
     // Use Layout helper to manage layout
     var layoutSize = [treemapObj.config.width, treemapObj.tilesContainerHeight];
-    treemapObj.layoutHelper = new LayoutHelper(layoutSize);
+    treemapObj.layoutHelper = new LayoutHelper(layoutSize, treemapObj.config.tiles);
     
 };
 
@@ -113,25 +113,9 @@ Treemap.prototype.updateTreemap = function(){
     // Update breadCumbs
     treemapObj.updateBreadCrumbs();
 
-    ////////////////////////////////////
-    ////////////////////////////////////
-
     // run layout for current node
     var currentNode = treemapObj.treePath.currentNode();
-    var nodeCopy    = currentNode.copy();   // copy node and descendants, so the laytout does not mess with original data
-    
-    var layoutNode;
-    var iterations = 0;
-    var layoutObtained = false;
-    while( (!layoutObtained) && iterations < 100 ){
-        var layoutNode = treemapObj.layoutHelper.layout(nodeCopy);
-        console.log(layoutNode.children);
-        var tileSizeRespected = treemapObj.layoutHelper.isMinimalTileSizeRespected(layoutNode, 200, 100);
-        iterations++;
-    }
-    
-    //////////////////////////////////
-    //////////////////////////////////
+    var layoutNode = treemapObj.layoutHelper.getAdjustedLayout(currentNode);  // adjust tile size
 
     treemapObj.selection.selectAll('.node').remove();
     treemapObj.selection.select('#treemap-tiles-container').selectAll('.node')
