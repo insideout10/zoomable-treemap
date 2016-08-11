@@ -14,6 +14,9 @@ var treemapConfig = {
     width             : '100%',
     height            : '500px',
     
+    // animations' duration in msec
+    animationDuration : 350,
+    
     // tile options
     tiles: {
         

@@ -104,7 +104,7 @@ LayoutHelper.prototype.aggregateNSmallestTiles = function(node, tilesSortedBySiz
     // keep a reference to current obj
     var layoutHelper = this;
     
-    // Which tiles are to be aggregated? The n smallest
+    // which tiles are to be aggregated? The n smallest
     var tilesToBeAggregated = tilesSortedBySize.slice(0, numberOfTilesToBeAggregated); 
     
     // build new tile for aggregate the smallest ones

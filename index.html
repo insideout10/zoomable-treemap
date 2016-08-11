@@ -29,10 +29,10 @@
   <script id="treemap-tile-template" type="text/x-handlebars-template">
     <div class="treemap-tile-wrap" data-id="{{id-unico}}">
       <div class="rect">
-        <h2>{{titolo}}</h2>
+        <h2>{{data.name}}</h2>
         <hr />
         <div class="bottom">
-          <h4>{{descrittore}}<span>{{numero-elementi-interni}}</span></h4>
+          <h4>{{data.name}}<span>{{value}}</span></h4>
         </div>
         <div class="circ">
           <img src="{{icona}}" alt="" />

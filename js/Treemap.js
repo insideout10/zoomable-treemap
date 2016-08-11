@@ -117,12 +117,12 @@ Treemap.prototype.updateTreemap = function(){
     var currentNode = treemapObj.treePath.currentNode();
     var layoutNode = treemapObj.layoutHelper.getAdjustedLayout(currentNode);  // adjust tile size
 
-    treemapObj.selection.selectAll('.node').remove();
-    treemapObj.selection.select('#treemap-tiles-container').selectAll('.node')
+    treemapObj.selection.selectAll('.tile').remove();
+    var tiles = treemapObj.selection.select('#treemap-tiles-container').selectAll('.tile')
         .data(layoutNode.children)
         .enter()
         .append('div')
-        .attr('class', 'node')
+        .attr('class', 'tile')
         .style('position', 'absolute')
         .style('top', function(d){
             return d.y0 + 'px';
@@ -141,21 +141,47 @@ Treemap.prototype.updateTreemap = function(){
         })
         .style('cursor', 'pointer')
         .html(function(d){
-            var tplObj = {
-                'titolo'                 : d.data.name,
-                'descrittore'            : d.data.name + d.data.name,
-                'numero-elementi-interni': d.value
-            };
-            return treemapObj.tileTpl(tplObj);
+            return treemapObj.tileTpl(d);
             //return d.data.name;
         })
+        .style('opacity', 0.0)
         .on('click', function(d){
             if(d.children){
-                treemapObj.downTo(d);
+
+                treemapObj.selection.selectAll('.tile')
+                    .transition()
+                    .style('opacity', function(f){
+                        if(d == f){
+                            return 1.0;
+                        } else {
+                            return 0.0;
+                        }
+                    })
+                    .duration(treemapObj.config.animationDuration);
+
+                d3.select(this).transition()
+                    .style('z-index', '100')
+                    .style('top', '0px')
+                    .style('left', '0px')
+                    .style('width', treemapObj.config.width + 'px')
+                    .style('height', treemapObj.tilesContainerHeight + 'px')
+                    .duration(treemapObj.config.animationDuration)
+                    .transition()
+                    .style('opacity', 0.0)
+                    //.remove()
+                    .duration(treemapObj.config.animationDuration)
+                    .on('end', function(){
+                        treemapObj.downTo(d);
+                    });
+
             } else {
                 alert('leaf');
             }
         });
+    
+    tiles.transition()
+        .style('opacity', 1.0)
+        .duration(treemapObj.config.animationDuration);
 };
 
 Treemap.prototype.updateBreadCrumbs = function(){
