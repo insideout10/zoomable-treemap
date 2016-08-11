@@ -141,13 +141,13 @@ Treemap.prototype.updateTreemap = function(){
         })
         .style('cursor', 'pointer')
         .html(function(d){
-            /*var tplObj = {
+            var tplObj = {
                 'titolo'                 : d.data.name,
                 'descrittore'            : d.data.name + d.data.name,
                 'numero-elementi-interni': d.value
             };
-            return treemapObj.tileTpl(tplObj);*/
-            return d.data.name;
+            return treemapObj.tileTpl(tplObj);
+            //return d.data.name;
         })
         .on('click', function(d){
             if(d.children){
