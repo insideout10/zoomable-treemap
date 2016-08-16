@@ -4,10 +4,17 @@ var d3 = require('./../node_modules/d3/build/d3.min.js')
 
 var Animator = function(config){
     
-    // Store config as ana attribute
+    // Store config as an attribute
     this.config = config;
 };
 
+/**
+ * Expand the clicked tile to occupy all the grid.
+ * 
+ * @param {d3.selection} selection The d3 selection holding the treemap.
+ * @param {HTMLelement} element DOM element relative to the clicked node.
+ * @param {function} onEndCallback Function to be called at animation end.
+ */
 Animator.prototype.expandNode = function(selection, element, onEndCallback){
     
     var tile              = d3.select(element).data()[0];    // we need both the HTML element and the data associated with it

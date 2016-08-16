@@ -152,9 +152,10 @@ Treemap.prototype.updateTreemap = function(){
         .on('click', function(d){
             if(d.children){
                 
+                // Run expand animation and then update the treemap
                 var element = this;
-                
                 treemapObj.animator.expandNode(treemapObj.selection, element, function(){
+                    // This will be executed at after the animation finished
                     treemapObj.downTo(d);
                 });
 

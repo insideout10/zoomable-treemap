@@ -28,7 +28,10 @@ var treemapConfig = {
         templateSelector : '#treemap-tile-template',
         
         // padding
-        padding          : 5
+        padding          : 5,
+        
+        // 'other' tile text label
+        otherLabel       : 'Altro...'
     },
     
     // How to sort tiles

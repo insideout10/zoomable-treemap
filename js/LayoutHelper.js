@@ -110,7 +110,7 @@ LayoutHelper.prototype.aggregateNSmallestTiles = function(node, tilesSortedBySiz
     // build new tile for aggregate the smallest ones
     var newTile = {
         data     : {
-            name     : 'ALTRO'
+            name     : layoutHelper.config.otherLabel
         },
         parent   : node,
         children : [],
