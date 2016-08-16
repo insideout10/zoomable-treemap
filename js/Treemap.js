@@ -36,9 +36,27 @@ var Treemap = function(config){
             // prepare data
             treemapObj.data = d3.hierarchy(json);
             treemapObj.data.sum(function(d){
-                    return 1;
+                    if(d.children){
+                        return 0;
+                    } else {
+                        return 1;
+                    }
                 })
-                .sort(treemapObj.config.sortCallback);
+                .each(function(d){
+                    
+                    // store a copy of value because we will mess it up
+                    d.data.originalValue = d.value;
+                    
+                    // launch custom callback
+                    if(treemapObj.config.dataPreparationCallback){
+                        treemapObj.config.dataPreparationCallback(d);
+                    }
+                })
+                .sort(function(){
+                    if(treemapObj.config.sortCallback){
+                        return treemapObj.config.sortCallback;
+                    }
+                });
                 
             // init and launch treemap
             treemapObj.initTreemap();

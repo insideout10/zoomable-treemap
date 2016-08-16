@@ -41,6 +41,12 @@ var treemapConfig = {
         otherLabel       : 'Altro...'
     },
     
+    // Data preparation callback. Will be called on every tile before treemap startup.
+    // Here you can modify each tile's data in place.
+    dataPreparationCallback : function(d){
+        //d.data.myCalculation = ...;
+    },
+    
     // How to sort tiles
     sortCallback      : function(a, b){
         return null;                 // random
