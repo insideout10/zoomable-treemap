@@ -183,7 +183,7 @@ Treemap.prototype.updateTreemap = function(){
                 });
 
             } else {
-                alert('leaf');
+                treemapObj.leafClicked(d);
             }
         });
     
@@ -212,6 +212,14 @@ Treemap.prototype.downTo = function(node){
     // update path
     this.treePath.downTo(node);
     
+    // jump level if there is only one children
+    if(node.children && (node.children.length == 1) ){
+        var nextNode = node.children[0];
+        if(nextNode.children){
+            this.downTo(nextNode);
+        }
+    }
+    
     // display subNode
     this.updateTreemap();
 };
@@ -232,6 +240,10 @@ Treemap.prototype.upToRoot = function(){
     
     // display root node
     this.updateTreemap();
+};
+
+Treemap.prototype.leafClicked = function(d){
+    alert('leaf');
 };
 
 module.exports = Treemap;
