@@ -3,6 +3,7 @@
 
 var TreePath     = require('./TreePath');
 var LayoutHelper = require('./LayoutHelper');
+var Animator     = require('./Animator');
 var $            = require('./../node_modules/jquery/dist/jquery.min.js');
 var d3           = require('./../node_modules/d3/build/d3.min.js');
 var Handlebars   = require('./../node_modules/handlebars/dist/handlebars.min.js'); 
@@ -51,6 +52,9 @@ Treemap.prototype.initTreemap = function(){
     
     // Use TreePath object to keep track of navigation
     treemapObj.treePath = new TreePath(treemapObj.data);
+    
+    // Use Animator object to manage animations
+    treemapObj.animator = new Animator(treemapObj.config);
         
     // Create main <div> and resize it
     treemapObj.selection = d3.select( treemapObj.config.containerSelector )
@@ -147,32 +151,12 @@ Treemap.prototype.updateTreemap = function(){
         .style('opacity', 0.0)
         .on('click', function(d){
             if(d.children){
-
-                treemapObj.selection.selectAll('.tile')
-                    .transition()
-                    .style('opacity', function(f){
-                        if(d == f){
-                            return 1.0;
-                        } else {
-                            return 0.0;
-                        }
-                    })
-                    .duration(treemapObj.config.animationDuration);
-
-                d3.select(this).transition()
-                    .style('z-index', '100')
-                    .style('top', '0px')
-                    .style('left', '0px')
-                    .style('width', treemapObj.config.width + 'px')
-                    .style('height', treemapObj.tilesContainerHeight + 'px')
-                    .duration(treemapObj.config.animationDuration)
-                    .transition()
-                    .style('opacity', 0.0)
-                    //.remove()
-                    .duration(treemapObj.config.animationDuration)
-                    .on('end', function(){
-                        treemapObj.downTo(d);
-                    });
+                
+                var element = this;
+                
+                treemapObj.animator.expandNode(treemapObj.selection, element, function(){
+                    treemapObj.downTo(d);
+                });
 
             } else {
                 alert('leaf');
