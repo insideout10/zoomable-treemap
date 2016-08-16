@@ -20,9 +20,16 @@ var treemapConfig = {
     // tile options
     tiles: {
         
-        // Minimal size
+        // Minimal size for each tile. If tiles can be small, leave undefined.
         minWidth         : 150,
         minHeight        : 105,
+        
+        /**
+         * How much squares should be forced to be similar to each other in size
+         * 0 - no flattening (default)
+         * 1, 2, 5, 10 ... - the higher the number, the more tiles will be forced to be similar to each other
+         */
+        flatteningFactor : 2,
         
         // CSS selector for the DOM element containing the Handlebars tile template
         templateSelector : '#treemap-tile-template',
@@ -36,7 +43,7 @@ var treemapConfig = {
     
     // How to sort tiles
     sortCallback      : function(a, b){
-        return null;             // random
+        return null;                 // random
         //return b.value - a.value;  // descending
         //return a.value - b.value;  // ascending
     },

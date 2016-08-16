@@ -16,6 +16,9 @@ var LayoutHelper = function(layoutSize, config){
     // Padding
     this.config.padding = config.padding || 0;
     
+    // Flattening factor. Regulates how much tiles are forced to be of the same dimensions
+    this.config.flatteningFactor = config.flatteningFactor || 0;
+    
     this.layout = d3.treemap()
         .size( layoutSize )
         //.tile(d3.treemapSlice)    // mobile only
@@ -41,8 +44,10 @@ LayoutHelper.prototype.getAdjustedLayout = function(node){
     var numberOfTilesToBeAggregated = 1;
     do {
         
-        // Aggregate n smallest tiles and try to layout the rest
-        var shrinkedNode       = this.aggregateNSmallestTiles(node.copy(), tilesSortedBySize, numberOfTilesToBeAggregated); // copy node and descendants, so the laytout does not mess with original data (no side effects)
+        // Flatten tile sizes, so they are not too different in size
+        var shrinkedNode       = this.flattenTilesValues(node.copy()); // copy node and descendants, so the laytout does not mess with original data (no side effects)
+        // Aggregate n smallest tiles
+        shrinkedNode           = this.aggregateNSmallestTiles(shrinkedNode, tilesSortedBySize, numberOfTilesToBeAggregated);
         var shrinkedNodeLayout = this.layout(shrinkedNode.copy());
         
         // Is minimal size respected?
@@ -114,7 +119,7 @@ LayoutHelper.prototype.aggregateNSmallestTiles = function(node, tilesSortedBySiz
         },
         parent   : node,
         children : [],
-        value    : 1,
+        value    : 0,
     };
     
     var indexesOfTilesToBeAggregated = [];
@@ -134,6 +139,30 @@ LayoutHelper.prototype.aggregateNSmallestTiles = function(node, tilesSortedBySiz
     
     node.children.push(newTile);
     return node;
+};
+
+// Make tiles more similat to each other in term of size. Necessary to avoid too much tile aggregation
+LayoutHelper.prototype.flattenTilesValues = function(tile){
+    
+    // Read values from children
+    var tileValues = [];
+    var tileValuesSum = 0;
+    tile.children.forEach(function(d){
+        tileValues.push(d.value);
+        tileValuesSum += d.value;
+    });
+    
+    // Recompute all values to smoothen their differences
+    var tileValuesAverage = (tileValuesSum*1.0) / tileValues.length;
+    var flatteningFactor  = this.config.flatteningFactor;
+    tile.value = 0;
+    tile.children.forEach(function(d){
+        var roundingMean = tileValuesAverage*flatteningFactor;
+        d.value = (d.value + roundingMean)/(flatteningFactor+1);
+        tile.value += d.value;
+    });
+    
+    return tile;
 };
 
 LayoutHelper.prototype.tileArea = function(tile){

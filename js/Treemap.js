@@ -22,8 +22,10 @@ var Treemap = function(config){
     var datasetName = $(config.containerSelector).data('file');
 
     // Load template
-    var tileTplSource = $(config.tiles.templateSelector).html();
-    treemapObj.tileTpl = Handlebars.compile(tileTplSource);
+    if(config.tiles.templateSelector){
+        var tileTplSource = $(config.tiles.templateSelector).html();
+        treemapObj.tileTpl = Handlebars.compile(tileTplSource);
+    }
 
     // Load data and then draw the treemap
     d3.json(datasetName, function(error, json){
@@ -145,8 +147,11 @@ Treemap.prototype.updateTreemap = function(){
         })
         .style('cursor', 'pointer')
         .html(function(d){
-            return treemapObj.tileTpl(d);
-            //return d.data.name;
+            if(treemapObj.tileTpl){
+                return treemapObj.tileTpl(d);
+            } else {
+                return d.data.name;
+            }
         })
         .style('opacity', 0.0)
         .on('click', function(d){
