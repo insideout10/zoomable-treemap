@@ -101,14 +101,14 @@ Treemap.prototype.initTreemap = function(){
         });;
     treemapObj.navigation.append('span')
         .attr('id', 'treemap-navigation-up')
-        .text(' ___up')
+        .text(' UP')
         .style('cursor', 'pointer')
         .on('click', function(){
             treemapObj.upOneLevel();
         });
     treemapObj.navigation.append('span').text('home')
         .attr('id', 'treemap-navigation-home') 
-        .text(' ___home')
+        .text(' HOME')
         .style('cursor', 'pointer')
         .on('click', function(){
             treemapObj.upToRoot();
