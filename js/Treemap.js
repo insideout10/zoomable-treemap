@@ -95,10 +95,9 @@ Treemap.prototype.initTreemap = function(){
     // Add breadcumbs text and buttons
     treemapObj.breadCumbs = treemapObj.navigation.append('span')
         .attr('id', 'treemap-navigation-breadcumbs')
-        .style('cursor', 'pointer')
-        .on('click', function(){
-            treemapObj.upOneLevel();
-        });;
+        .style('cursor', 'pointer');
+    treemapObj.updateBreadCrumbs();
+        
     treemapObj.navigation.append('span')
         .attr('id', 'treemap-navigation-up')
         .text(' UP')
@@ -194,17 +193,25 @@ Treemap.prototype.updateTreemap = function(){
 
 Treemap.prototype.updateBreadCrumbs = function(){
     
-    var separator = this.config.breadCumbs.separator;
-    var breadCumbsTxt = '';
+    var treemapObj = this;
+    var separator  = this.config.breadCumbs.separator;
+    var ancestors  = this.treePath.path;
     
-    var ancestors = this.treePath.path;
-    if(ancestors){
-        ancestors.forEach(function(a){
-            breadCumbsTxt = breadCumbsTxt + a.data.name + separator;
+    this.breadCumbs.selectAll('.breadCrumbLevel').remove();
+    this.breadCumbs.selectAll('.breadCrumbLevel')
+        .data(ancestors)
+        .enter()
+        .append('span')
+        .attr('class', 'breadCrumbLevel')
+        .on('click', function(d, i){
+            var stepsBack = ancestors.length - i - 1;
+            for(var step=0; step<stepsBack; step++){
+                treemapObj.upOneLevel();
+            }
+        })
+        .text(function(d){
+            return d.data.name+ ' ' + separator;
         });
-    }
-    
-    this.breadCumbs.text(breadCumbsTxt);
 };
 
 Treemap.prototype.downTo = function(node){
