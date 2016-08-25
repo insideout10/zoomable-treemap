@@ -10,25 +10,27 @@ var Handlebars   = require('./../node_modules/handlebars/dist/handlebars.min.js'
 
 var Treemap = function(config){
     
-    // TODO: config defaults
-    
     // Reference to current obj
     var treemapObj = this;
     
     // Save config as class attribute
     treemapObj.config = config;
 
-    // Find container element and extract dataset name
-    var datasetName = $(config.containerSelector).data('file');
-
     // Load template
     if(config.tiles.templateSelector){
         var tileTplSource = $(config.tiles.templateSelector).html();
         treemapObj.tileTpl = Handlebars.compile(tileTplSource);
     }
+    
+    treemapObj.loadDataAndInit();
+};
 
+Treemap.prototype.loadDataAndInit = function(){
+    
+    var treemapObj = this;
+    
     // Load data and then draw the treemap
-    d3.json(datasetName, function(error, json){
+    d3.json(treemapObj.config.datasetURL, function(error, json){
         if (error) {
             console.error(error);
         } else {
@@ -63,7 +65,7 @@ var Treemap = function(config){
             treemapObj.updateTreemap(treemapObj.data);
         }
     });
-};
+}
 
 Treemap.prototype.initTreemap = function(){
     

@@ -7,6 +7,9 @@ var Treemap = require('./Treemap');
 // Main data structure
 var treemapConfig = {
     
+    // Dataset address (will be loaded via AJAX)
+    datasetURL        : "complete.json",
+    
     // CSS selector for the DOM element in which the treemap will be
     containerSelector : '#treemap-container',
     
