@@ -42,7 +42,7 @@ gulp.task('sass', function(){
 
 gulp.task('browserify', function(done) {
     // Single entry point to browserify
-    gulp.src('js/main.js')
+    gulp.src('js/Treemap.js')
         .pipe(browserify({
           insertGlobals : true,
           debug : !gulp.env.production

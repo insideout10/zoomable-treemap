@@ -1,9 +1,6 @@
 
 'use strict';
 
-var $       = require('./../node_modules/jquery/dist/jquery.min.js');
-var Treemap = require('./Treemap');
-
 // Main data structure
 var treemapConfig = {
     
@@ -64,6 +61,8 @@ var treemapConfig = {
     },
 };
 
-$(document).ready( function() {
+// Wait for document to load
+document.addEventListener( 'DOMContentLoaded', function () {
+    // launch treemap with custom config
     var treemap = new Treemap(treemapConfig);
-});
+}, false );

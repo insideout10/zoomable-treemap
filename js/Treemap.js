@@ -4,7 +4,6 @@
 var TreePath     = require('./TreePath');
 var LayoutHelper = require('./LayoutHelper');
 var Animator     = require('./Animator');
-var $            = require('./../node_modules/jquery/dist/jquery.min.js');
 var d3           = require('./../node_modules/d3/build/d3.min.js');
 var Handlebars   = require('./../node_modules/handlebars/dist/handlebars.min.js'); 
 
@@ -18,7 +17,8 @@ var Treemap = function(config){
 
     // Load template
     if(config.tiles.templateSelector){
-        var tileTplSource = $(config.tiles.templateSelector).html();
+        var tplSelector = config.tiles.templateSelector.replace('#', '');
+        var tileTplSource = document.getElementById(tplSelector).innerHTML;
         treemapObj.tileTpl = Handlebars.compile(tileTplSource);
     }
     
@@ -255,6 +255,7 @@ Treemap.prototype.leafClicked = function(d){
     alert('leaf');
 };
 
+window.Treemap = Treemap; 
 module.exports = Treemap;
 
 
