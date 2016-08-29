@@ -54,6 +54,11 @@ var treemapConfig = {
         //return a.value - b.value;  // ascending
     },
     
+    // What happens when a tile with no children is clicked
+    tileClickedCallback : function(d){
+        window.open(d.data.info.Url);
+    },
+    
     // breadcumbs options
     breadCumbs        : {
         height    : '50px',

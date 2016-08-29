@@ -6,6 +6,7 @@ var LayoutHelper = require('./LayoutHelper');
 var Animator     = require('./Animator');
 var d3           = require('./../node_modules/d3/build/d3.min.js');
 var Handlebars   = require('./../node_modules/handlebars/dist/handlebars.min.js'); 
+var DeviceDetect = require('./vendor/device.min.js')
 
 var Treemap = function(config){
     
@@ -252,7 +253,9 @@ Treemap.prototype.upToRoot = function(){
 };
 
 Treemap.prototype.leafClicked = function(d){
-    alert('leaf');
+    if(this.config.tileClickedCallback){
+        this.config.tileClickedCallback(d);
+    }
 };
 
 window.Treemap = Treemap; 
