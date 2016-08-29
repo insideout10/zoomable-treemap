@@ -73,6 +73,9 @@ Treemap.prototype.initTreemap = function(){
     // Reference to current obj
     var treemapObj = this;
     
+    // Mobile portrait layout?
+    treemapObj.mobilePortrait = DeviceDetect.mobile() && DeviceDetect.portrait();
+    
     // Use TreePath object to keep track of navigation
     treemapObj.treePath = new TreePath(treemapObj.data);
     
@@ -82,7 +85,7 @@ Treemap.prototype.initTreemap = function(){
     // Create main <div> and resize it
     treemapObj.selection = d3.select( treemapObj.config.containerSelector )
         .style('width', treemapObj.config.width)
-        .style('height', treemapObj.config.height);
+        .style('height', treemapObj.config.height)
 
     // Save width and height in pixels
     treemapObj.config.width = parseInt( treemapObj.selection.style('width'), 10 );

@@ -10,10 +10,6 @@ var treemapConfig = {
     // CSS selector for the DOM element in which the treemap will be
     containerSelector : '#treemap-container',
     
-    // width and height of the treemap
-    width             : '100%',
-    height            : '500px',
-    
     // animations' duration in msec
     animationDuration : 350,
     
@@ -61,7 +57,7 @@ var treemapConfig = {
     
     // breadcumbs options
     breadCumbs        : {
-        height    : '50px',
+        height    : '30px',
         separator : ' | '
     },
 };
