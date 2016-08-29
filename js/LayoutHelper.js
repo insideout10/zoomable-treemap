@@ -10,7 +10,7 @@ var LayoutHelper = function(layoutSize, isMobilePortrait, config){
     this.config.padding = config.padding || 0;
     
     // Flattening factor. Regulates how much tiles are forced to be of the same dimensions
-    this.config.flatteningFactor = config.flatteningFactor || 0;
+    this.config.flatteningFactor = config.flatteningFactor || 10;
     
     // Store if we are in vertical/mobile layout or not
     this.isMobilePortrait = isMobilePortrait;
@@ -40,28 +40,27 @@ var LayoutHelper = function(layoutSize, isMobilePortrait, config){
 LayoutHelper.prototype.getAdjustedLayout = function(node){
     
     // No adjustments required
-    if(!this.config.minWidth || !this.config.minHeight){
+    if(!this.config.minWidth || !this.config.minHeight || !this.config.minHeightMobile){
         return this.layout(node.copy());   // copy node and descendants, so the laytout does not mess with original data (no side effects)
     }
 
     var tilesSortedBySize = node.children.slice();
     tilesSortedBySize.sort(function(a, b){
-        //return layoutHelper.tileArea(a) - layoutHelper.tileArea(b);
         return a.value - b.value;
     });
     
     var numberOfTilesToBeAggregated = 1;
     do {
         
-        // Flatten tile sizes, so they are not too different in size
-        var shrinkedNode       = this.flattenTilesValues(node.copy()); // copy node and descendants, so the laytout does not mess with original data (no side effects)
         // Aggregate n smallest tiles
-        shrinkedNode           = this.aggregateNSmallestTiles(shrinkedNode, tilesSortedBySize, numberOfTilesToBeAggregated);
+        var shrinkedNode = this.aggregateNSmallestTiles(node.copy(), tilesSortedBySize, numberOfTilesToBeAggregated);
+        
+        // Recompute layout (tiles coordinates and size on screen)
         var shrinkedNodeLayout = this.layout(shrinkedNode.copy());
         
-        // Is minimal size respected?
+        // Is minimal tile size respected?
         if(this.everyTileIsRespectingMinimalSize(shrinkedNodeLayout)){
-            // ... yes, return laytou
+            // ... yes, return layout
             return shrinkedNodeLayout;
         } else {
             // ... no, we must aggregate more tiles
@@ -94,35 +93,14 @@ LayoutHelper.prototype.everyTileIsRespectingMinimalSize = function(node){
     return true;
 }
 
-// Get tiles not respecting the minimal desired size
-/*LayoutHelper.prototype.getTilesNotRespectingMinimalSize = function(node){
-    
-    var minimalWidth  = this.config.minWidth;
-    var minimalHeight = this.config.minHeight;
-    var nodesWhichAreTooSmall = [];
-    
-    node.children.forEach(function(tile){
-        var tileWidth  = tile.x1 - tile.x0;
-        var tileHeight = tile.y1 - tile.y0;
-        if( tileWidth < minimalWidth || tileHeight < minimalHeight ){
-            nodesWhichAreTooSmall.push(tile);
-        }
-    });
-    return nodesWhichAreTooSmall;
-}*/
-
 // Fuse the two smallest tiles which are smaller than the required size
 LayoutHelper.prototype.aggregateNSmallestTiles = function(node, tilesSortedBySize, numberOfTilesToBeAggregated){
-    
-    if(numberOfTilesToBeAggregated < 2){
-        return node;
-    }
     
     // keep a reference to current obj
     var layoutHelper = this;
     
     // which tiles are to be aggregated? The n smallest
-    var tilesToBeAggregated = tilesSortedBySize.slice(0, numberOfTilesToBeAggregated); 
+    var tilesToBeAggregated = tilesSortedBySize.slice(0, numberOfTilesToBeAggregated);
     
     // build new tile for aggregate the smallest ones
     var newTile = {
@@ -131,9 +109,10 @@ LayoutHelper.prototype.aggregateNSmallestTiles = function(node, tilesSortedBySiz
         },
         parent   : node,
         children : [],
-        value    : 0,
+        value    : 0
     };
     
+    // compress smallest tiles into one
     var indexesOfTilesToBeAggregated = [];
     tilesToBeAggregated.forEach(function(t){
         node.children.forEach(function(c, i){
@@ -145,16 +124,36 @@ LayoutHelper.prototype.aggregateNSmallestTiles = function(node, tilesSortedBySiz
         });
     });
     
+    // Keep only non-aggregated tiles
     node.children = node.children.filter(function(c, i){
         return indexesOfTilesToBeAggregated.indexOf(i) == -1;
     });
     
+    // The "other..." tile is forced to be of average value. The other tiles adapt.
+    var valueAverage = node.value / (node.children.length + 1);
+    var newNodeValue = node.value + valueAverage;
+    var remainingSpace = newNodeValue - valueAverage;
+    newTile.value    = valueAverage;
+    
+    // Add "other..." tile
     node.children.push(newTile);
+    node.value = 0;
+    node.children.forEach(function(c){
+        var flatteningFactor = layoutHelper.config.flatteningFactor;
+        var roundingMean = valueAverage*flatteningFactor;
+        c.value = (c.value + roundingMean)/(flatteningFactor+1);
+        node.value += c.value;
+    });
+    
     return node;
 };
 
-// Make tiles more similat to each other in term of size. Necessary to avoid too much tile aggregation
-LayoutHelper.prototype.flattenTilesValues = function(tile){
+LayoutHelper.prototype.tileArea = function(tile){
+    return (tile.x1 - tile.x0)*(tile.y1 - tile.y0);
+}
+
+// Make tiles more similar to each other in term of size. Necessary to avoid too much tile aggregation
+/*LayoutHelper.prototype.flattenTilesValues = function(tile){
     
     // Read values from children
     var tileValues = [];
@@ -175,11 +174,24 @@ LayoutHelper.prototype.flattenTilesValues = function(tile){
     });
     
     return tile;
-};
+};*/
 
-LayoutHelper.prototype.tileArea = function(tile){
-    return (tile.x1 - tile.x0)*(tile.y1 - tile.y0);
-}
+// Get tiles not respecting the minimal desired size
+/*LayoutHelper.prototype.getTilesNotRespectingMinimalSize = function(node){
+    
+    var minimalWidth  = this.config.minWidth;
+    var minimalHeight = this.config.minHeight;
+    var nodesWhichAreTooSmall = [];
+    
+    node.children.forEach(function(tile){
+        var tileWidth  = tile.x1 - tile.x0;
+        var tileHeight = tile.y1 - tile.y0;
+        if( tileWidth < minimalWidth || tileHeight < minimalHeight ){
+            nodesWhichAreTooSmall.push(tile);
+        }
+    });
+    return nodesWhichAreTooSmall;
+}*/
 
 module.exports = LayoutHelper;
 
