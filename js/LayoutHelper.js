@@ -2,16 +2,9 @@
 
 var d3 = require('./../node_modules/d3/build/d3.min.js');
 
-var LayoutHelper = function(layoutSize, config){
+var LayoutHelper = function(layoutSize, isMobilePortrait, config){
 
     this.config = config;
-    
-    // Tile ratio
-    if(config.minHeight && config.minWidth){
-        this.config.ratio = config.minWidth / config.minHeight;
-    } else {
-        this.config.ratio = 1.618034;   // golden ratio
-    }
     
     // Padding
     this.config.padding = config.padding || 0;
@@ -19,11 +12,27 @@ var LayoutHelper = function(layoutSize, config){
     // Flattening factor. Regulates how much tiles are forced to be of the same dimensions
     this.config.flatteningFactor = config.flatteningFactor || 0;
     
+    // Store if we are in vertical/mobile layout or not
+    this.isMobilePortrait = isMobilePortrait;
+    
+    // Use different tiling methods for mobile portrait vs. all the rest
+    var tilingAlgorithm;
+    if(isMobilePortrait){
+        // just cut treemap vertically
+        tilingAlgorithm = d3.treemapSlice;
+    } else {
+        // Tile ratio
+        var ratio = 1.618034;   // golden ratio by default
+        if(config.minHeight && config.minWidth){
+            ratio = config.minWidth / config.minHeight; // overwrite if necessary
+        }
+        tilingAlgorithm = d3.treemapSquarify.ratio(ratio);
+    }
+    
+    // Prepare layout generator
     this.layout = d3.treemap()
         .size( layoutSize )
-        //.tile(d3.treemapSlice)    // mobile only
-        //.tile(d3.treemapBinary)
-        .tile(d3.treemapSquarify.ratio(this.config.ratio))
+        .tile(tilingAlgorithm)
         .padding(this.config.padding);
 };
 
@@ -70,6 +79,9 @@ LayoutHelper.prototype.everyTileIsRespectingMinimalSize = function(node){
     
     var minimalWidth  = this.config.minWidth;
     var minimalHeight = this.config.minHeight;
+    if(this.isMobilePortrait && this.config.minHeightMobile){
+        minimalHeight = this.config.minHeightMobile;
+    }
     
     for(var i=0; i<node.children.length; i++){
         var tile = node.children[i];

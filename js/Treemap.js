@@ -74,7 +74,7 @@ Treemap.prototype.initTreemap = function(){
     var treemapObj = this;
     
     // Mobile portrait layout?
-    treemapObj.mobilePortrait = DeviceDetect.mobile() && DeviceDetect.portrait();
+    treemapObj.isMobilePortrait = DeviceDetect.mobile() && DeviceDetect.portrait();
     
     // Use TreePath object to keep track of navigation
     treemapObj.treePath = new TreePath(treemapObj.data);
@@ -130,7 +130,7 @@ Treemap.prototype.initTreemap = function(){
 
     // Use Layout helper to manage layout
     var layoutSize = [treemapObj.config.width, treemapObj.tilesContainerHeight];
-    treemapObj.layoutHelper = new LayoutHelper(layoutSize, treemapObj.config.tiles);
+    treemapObj.layoutHelper = new LayoutHelper(layoutSize, treemapObj.isMobilePortrait, treemapObj.config.tiles);
     
 };
 

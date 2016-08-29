@@ -20,6 +20,9 @@ var treemapConfig = {
         minWidth         : 150,
         minHeight        : 105,
         
+        // Minimal height for each tile when in mobile portrait. If tiles can be small, leave undefined.
+        minHeightMobile  : 100,
+        
         /**
          * How much squares should be forced to be similar to each other in size
          * 0 - no flattening (default)
@@ -28,7 +31,7 @@ var treemapConfig = {
         flatteningFactor : 2,
         
         // CSS selector for the DOM element containing the Handlebars tile template
-        templateSelector : '#treemap-tile-template',
+        //templateSelector : '#treemap-tile-template',
         
         // padding
         padding          : 5,
@@ -57,7 +60,7 @@ var treemapConfig = {
     
     // breadcumbs options
     breadCumbs        : {
-        height    : '30px',
+        height    : '50px',
         separator : ' | '
     },
 };
