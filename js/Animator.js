@@ -44,7 +44,7 @@ Animator.prototype.expandNode = function(selection, element, onEndCallback){
         .transition()
         .style('opacity', 0.0)
         .remove()
-        .duration(animationDuration)
+        .duration(animationDuration/10)
         .on('end', onEndCallback);
     
 };
