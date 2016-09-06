@@ -21,7 +21,7 @@ var treemapConfig = {
         minHeight        : 105,
         
         // Minimal height for each tile when in mobile portrait. If tiles can be small, leave undefined.
-        minHeightMobile  : 80,
+        minHeightMobile  : 100,
         
         // CSS selector for the DOM element containing the Handlebars tile template
         templateSelector : '#treemap-tile-template',
