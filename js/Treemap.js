@@ -130,7 +130,7 @@ Treemap.prototype.initTreemap = function(){
 
     // Use Layout helper to manage layout
     var layoutSize = [treemapObj.config.width, treemapObj.tilesContainerHeight];
-    treemapObj.layoutHelper = new LayoutHelper(layoutSize, treemapObj.isMobilePortrait, treemapObj.config.tiles);
+    treemapObj.layoutHelper = new LayoutHelper(layoutSize, treemapObj.isMobilePortrait, treemapObj.config);
     
 };
 

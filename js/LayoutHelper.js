@@ -4,10 +4,11 @@ var d3 = require('./../node_modules/d3/build/d3.min.js');
 
 var LayoutHelper = function(layoutSize, isMobilePortrait, config){
 
-    this.config = config;
+    this.config = config.tiles;
+    this.config.tileAggregationCallback = config.tileAggregationCallback;
     
     // Padding
-    this.config.padding = config.padding || 0;
+    this.config.padding = this.config.padding || 0;
     
     // Flattening factor. Regulates how much tiles are forced to be of the same dimensions
     this.config.flatteningFactor = config.flatteningFactor || 10;
@@ -131,6 +132,9 @@ LayoutHelper.prototype.aggregateNSmallestTiles = function(node, tilesSortedBySiz
             }
         });
     });
+    
+    // Customize "other..." tile based on the aggregated ones
+    layoutHelper.config.tileAggregationCallback(newTile)
     
     // Keep only non-aggregated tiles
     node.children = node.children.filter(function(c, i){

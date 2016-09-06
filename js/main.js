@@ -46,6 +46,12 @@ var treemapConfig = {
         //return a.value - b.value;  // ascending
     },
     
+    // Modify aggregated tile ("other...") just after it is built
+    tileAggregationCallback : function(d){
+        //d.data.name  = "Another name";
+        //d.data.color = "#ef2";
+    },
+    
     // What happens when a tile with no children is clicked
     tileClickedCallback : function(d){
         window.open(d.data.info.Url);
