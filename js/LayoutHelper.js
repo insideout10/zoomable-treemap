@@ -55,6 +55,9 @@ LayoutHelper.prototype.getAdjustedLayout = function(node){
         // Aggregate n smallest tiles
         var shrinkedNode = this.aggregateNSmallestTiles(node.copy(), tilesSortedBySize, numberOfTilesToBeAggregated);
         
+        // Flatten tiles (big tiles get smaller and small tiles get bigger)
+        shrinkedNode = this.flattenTilesValues(shrinkedNode);
+        
         // Recompute layout (tiles coordinates and size on screen)
         var shrinkedNodeLayout = this.layout(shrinkedNode.copy());
         
@@ -93,9 +96,14 @@ LayoutHelper.prototype.everyTileIsRespectingMinimalSize = function(node){
     return true;
 }
 
-// Fuse the two smallest tiles which are smaller than the required size
+// Fuse the n smallest tiles which are smaller than the required size
 LayoutHelper.prototype.aggregateNSmallestTiles = function(node, tilesSortedBySize, numberOfTilesToBeAggregated){
     
+    if(numberOfTilesToBeAggregated < 2){
+        // Do nothing
+        return node
+    }
+        
     // keep a reference to current obj
     var layoutHelper = this;
     
@@ -111,7 +119,7 @@ LayoutHelper.prototype.aggregateNSmallestTiles = function(node, tilesSortedBySiz
         children : [],
         value    : 0
     };
-    
+
     // compress smallest tiles into one
     var indexesOfTilesToBeAggregated = [];
     tilesToBeAggregated.forEach(function(t){
@@ -132,11 +140,26 @@ LayoutHelper.prototype.aggregateNSmallestTiles = function(node, tilesSortedBySiz
     // The "other..." tile is forced to be of average value. The other tiles adapt.
     var valueAverage = node.value / (node.children.length + 1);
     var newNodeValue = node.value + valueAverage;
-    var remainingSpace = newNodeValue - valueAverage;
     newTile.value    = valueAverage;
     
     // Add "other..." tile
     node.children.push(newTile);
+    
+    return node;
+};
+
+LayoutHelper.prototype.tileArea = function(tile){
+    return (tile.x1 - tile.x0)*(tile.y1 - tile.y0);
+}
+
+// Make tiles more similar to each other in term of size. Necessary to avoid too much tile aggregation
+LayoutHelper.prototype.flattenTilesValues = function(node){
+    
+    var layoutHelper = this;
+    
+    var valueAverage = node.value / node.children.length;
+    
+    // Flattening process (make big tiles smaller and small tiles bigger)
     node.value = 0;
     node.children.forEach(function(c){
         var flatteningFactor = layoutHelper.config.flatteningFactor;
@@ -147,34 +170,6 @@ LayoutHelper.prototype.aggregateNSmallestTiles = function(node, tilesSortedBySiz
     
     return node;
 };
-
-LayoutHelper.prototype.tileArea = function(tile){
-    return (tile.x1 - tile.x0)*(tile.y1 - tile.y0);
-}
-
-// Make tiles more similar to each other in term of size. Necessary to avoid too much tile aggregation
-/*LayoutHelper.prototype.flattenTilesValues = function(tile){
-    
-    // Read values from children
-    var tileValues = [];
-    var tileValuesSum = 0;
-    tile.children.forEach(function(d){
-        tileValues.push(d.value);
-        tileValuesSum += d.value;
-    });
-    
-    // Recompute all values to smoothen their differences
-    var tileValuesAverage = (tileValuesSum*1.0) / tileValues.length;
-    var flatteningFactor  = this.config.flatteningFactor;
-    tile.value = 0;
-    tile.children.forEach(function(d){
-        var roundingMean = tileValuesAverage*flatteningFactor;
-        d.value = (d.value + roundingMean)/(flatteningFactor+1);
-        tile.value += d.value;
-    });
-    
-    return tile;
-};*/
 
 // Get tiles not respecting the minimal desired size
 /*LayoutHelper.prototype.getTilesNotRespectingMinimalSize = function(node){
