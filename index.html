@@ -24,15 +24,12 @@
   </div>
 
   <script id="treemap-tile-template" type="text/x-handlebars-template">
-    <div class="treemap-tile-wrap" data-id="{{id-unico}}">
+    <div class="treemap-tile-wrap" data-id="{{data.info.itemId}}">
       <div class="rect">
-        <h2>{{data.name}}</h2>
+        <h2>{{data.info.label}}<span> {{data.info.scoreLabel}}</span></h2>
         <hr />
         <div class="bottom">
-          <h4>{{data.name}}<span>{{data.originalValue}}</span></h4>
-        </div>
-        <div class="circ">
-          <img src="{{icona}}" alt="" />
+          <h4>{{data.info.label}}<span>{{data.info.itemId}}</span></h4>
         </div>
       </div>
     </div>
