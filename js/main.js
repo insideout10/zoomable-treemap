@@ -5,7 +5,7 @@
 var treemapConfig = {
     
     // Dataset address (will be loaded via AJAX)
-    datasetURL        : "http://localhost:8080/treemap?domain=salzburgerland.com&url=https://www.salzburgerland.com/en/&country=us&language=en&dataset=en",
+    datasetURL        : "complete.json",
     
     // CSS selector for the DOM element in which the treemap will be
     containerSelector : '#treemap-container',
