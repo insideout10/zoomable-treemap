@@ -12,6 +12,9 @@ var treemapConfig = {
     
     // animations' duration in msec
     animationDuration : 350,
+
+    // Minimal tiles with the same size
+    flatteningFactor : 1,
     
     // tile options
     tiles: {

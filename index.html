@@ -2,42 +2,44 @@
 <html>
 
 <head>
-  <title>dati.gov.it - Zoomable treemap</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>dati.gov.it - Zoomable treemap</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/style.css">
 
 </head>
 
 <body>
 
-  <div id="treemap-container"></div>
+	<div id="treemap-container"></div>
 
-  <div class="wrap">
-    <div class="breadcrumbs-wrap">
-      <div class="breadcrums"></div>
-      <div class="treemap-wrap">
-        <div class="treemap"></div>
-      </div>
-    </div>
-  </div>
+	<div class="wrap">
+		<div class="breadcrumbs-wrap">
+			<div class="breadcrums"></div>
+			<div class="treemap-wrap">
+				<div class="treemap"></div>
+			</div>
+		</div>
+	</div>
 
-  <script id="treemap-tile-template" type="text/x-handlebars-template">
-    <div class="treemap-tile-wrap" data-id="{{data.info.itemId}}">
-      <div class="rect">
-        <h2>{{data.info.label}}<span> {{data.info.scoreLabel}}</span></h2>
-        <hr />
-        <div class="bottom">
-          <h4>{{data.info.label}}<span>{{data.info.itemId}}</span></h4>
-        </div>
-      </div>
-    </div>
-  </script>
+	<script id="treemap-tile-template" type="text/x-handlebars-template">
+		<div class="treemap-tile-wrap" data-id="{{data.info.itemId}}">
+			<div class="rect">
+				<h2>{{data.info.label}}<span> {{data.info.scoreLabel}}</span></h2>
+				<div class="bottom">
+					<h4>
+						{{data.info.label}} <br>
+						<a href="{{data.info.itemId}}">{{data.info.itemId}}</a>
+					</h4>
+				</div>
+			</div>
+		</div>
+	</script>
 
-  <!-- javascript  -->
-  <script src="treemapBundle.js"></script>
-  <script src="js/main.js"></script>
+	<!-- javascript  -->
+	<script src="treemapBundle.js"></script>
+	<script src="js/main.js"></script>
 
 </body>
 

@@ -68,7 +68,6 @@ LayoutHelper.prototype.getAdjustedLayout = function(node) {
     // Recompute layout (tiles coordinates and size on screen)
     var shrinkedNodeLayout = this.layout(shrinkedNode.copy());
 
-    console.log(node);
     // Is minimal tile size respected?
     if (this.everyTileIsRespectingMinimalSize(shrinkedNodeLayout)) {
       // ... yes, return layout

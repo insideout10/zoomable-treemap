@@ -10,29 +10,32 @@ body
   position: absolute
   box-sizing: border-box
   height: 100%
-  /*background-color: red*/
   width: 100%
 
 .rect
   position: absolute
-  bottom: 0
   left: 0
   right: 0
+  bottom: 0
+  top: 0
+  text-align: center
   height: 75px
-  background-color: #ccc
+  padding: 10px
+  word-wrap: break-word
   h2
     font-size: 16px
     margin: 0
     padding: 0
-    padding-left: 10px
     padding-top: 10px
-    max-width: calc(100% - 75px)
+    span
+      display: block
   h4
     margin: 0
     padding: 0
-    padding-left: 10px
     font-weight: 300
     font-size: 12px
+    a
+      color: inherit
 
 .circ
   position: absolute
